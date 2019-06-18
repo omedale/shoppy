@@ -4,6 +4,8 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException as NotFoundHttpException;
+use Illuminate\Support\Facades\DB;
 
 class Handler extends ExceptionHandler
 {
@@ -46,6 +48,23 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof NotFoundHttpException && $request->is('api/*')){
+            return response()->json(
+                [
+                    'message' =>  'Unkown route',
+                ]
+            )->setStatusCode(404);
+        }
+
+        if ($request->is('api/*')) {
+            DB::rollback();
+            return response()->json(
+                [
+                    'message' =>  'Sorry, an error occurred',
+                ]
+            );
+        }
+
         return parent::render($request, $exception);
     }
 }

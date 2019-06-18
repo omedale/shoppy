@@ -13,6 +13,10 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::group(['middleware' => ['api','cors']], function () {
+    Route::group(['middleware' => 'jwt-auth'], function () {
+
+    });
+    Route::post('/customer', 'Api\CustomerController@register');
+    Route::post('/customer/login', 'Api\CustomerController@login');
 });
