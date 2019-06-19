@@ -117,7 +117,68 @@ class CustomerTest extends TestCase
                 ],
                 'expires_in' => '24h',
             ]);
-        $this->clear_db();
+            $this->clear_db();
+    }
+
+    /**
+     * Test for invalid customer address update
+     * When required fields are not provided
+     * @return void
+     */
+    public function test_unsuccessfull_customer_address_update() {
+        $customer = factory(Customer::class)->create();
+        $token = $customer->generateToken('omedale');
+        $headers = ['API-KEY' => "Bearer $token"];
+        $payload = [
+            'address_2' => 'Ipsum',
+        ];
+        $response = $this->json('PUT', 'api/customers/address', $payload, $headers);
+        $response->assertStatus(500)
+        ->assertJson([
+            'error' => [
+                'status' => 500,
+                'code' => "USR_02",
+                'message' => "The field(s) are/is required.",
+                'field_errors' => [
+                    "address_1" => ["Address 1 is required"],
+                    "city" => ["City is required"],
+                    "region" => ["Region is required"],
+                    "postal_code" => ["Postal code is required"],
+                    "country" => ["Country is required"],
+                    "shipping_region_id" => ["Shipping region id is required"]
+                ]
+            ]
+        ]);
+    }
+
+     /**
+     * Test customer address update
+     * Can succesfully update address
+     * @return void
+     */
+    public function test_successfull_customer_address_update() {
+        $customer = factory(Customer::class)->create();
+        $token = $customer->generateToken('omedale');
+        $headers = ['API-KEY' => "Bearer $token"];
+        $payload = [
+            'address_1' => 'Lorem',
+            'address_2' => 'Ipsum',
+            'city' => 'Lorem',
+            'postal_code' => 'Ipsum',
+            'shipping_region_id' => 2,
+            'country' => 'Nigeria',
+            'region' => 'Other'
+        ];
+        $response = $this->json('PUT', 'api/customers/address', $payload, $headers);
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'address_1',
+                'shipping_region_id',
+            ])
+            ->assertJson([
+                'address_1' => 'Lorem',
+                'shipping_region_id' => 2,
+            ]);
     }
 
     private function clear_db() {

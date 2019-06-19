@@ -25,4 +25,13 @@ class Customer extends Authenticatable implements JWTSubject
     {
       return [];
     }
+
+    public function generateToken($password)
+    {
+        $credentials = [
+            'email' => $this->email,
+            'password' => $password
+        ];
+        return auth()->attempt($credentials);
+    }
 }

@@ -26,6 +26,17 @@ class ErrorHelper {
         ->setStatusCode(500);
     }
 
+    public static function NOT_FOUND($model) {
+        return response()->json([
+            'error' => [
+                'status' => 404,
+                'code' => "NOT_FOUND",
+                'message' => $model." not found",
+            ]
+        ])
+        ->setStatusCode(404);
+    }
+
     public static function AUT_03() {
         return response()->json([
             'error' => [

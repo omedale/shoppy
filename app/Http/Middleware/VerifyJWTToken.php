@@ -25,6 +25,9 @@ class VerifyJWTToken
                 $request->headers->set('Authorization', $authorization);
             }
             $customer =  JWTAuth::parseToken()->authenticate();
+            if(!$customer) {
+                return ErrorHelper::AUT_02();
+            }
             $request->request->add(['jwt_customer_id' =>  $customer->customer_id]);
         } catch (JWTException $e) {
             if ($e instanceof \Tymon\JWTAuth\Exceptions\TokenExpiredException) {
