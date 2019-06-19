@@ -69,10 +69,15 @@ class CustomerController extends Controller
 
         $credentials = $request->only(['email', 'password']);
         if (!$token = auth()->attempt($credentials)) {
-            return ErrorHelper::AUT_02();
+            return ErrorHelper::USR_01();
         }
 
         return $this->respondWithToken($token, auth()->user(), 200);
+    }
+
+    public function update(Request $request)
+    {
+
     }
 
     protected function respondWithToken($token, $customer, $status)

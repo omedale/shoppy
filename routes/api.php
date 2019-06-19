@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => ['api','cors']], function () {
     Route::group(['middleware' => 'jwt-auth'], function () {
-
+        Route::put('/customer', 'Api\CustomerController@update');
     });
     Route::post('/customer', 'Api\CustomerController@register');
     Route::post('/customer/login', 'Api\CustomerController@login');

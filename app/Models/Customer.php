@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Customer extends Authenticatable implements JWTSubject
 {
     protected $table = 'customer';
+    protected $primaryKey = "customer_id";
     protected $fillable = ['name', 'email', 'password'];
 
 
