@@ -16,12 +16,16 @@ class CustomerController extends Controller
     {
         $get_input = $request->all();
         $rules = [
+            'name' => 'required',
             'email' => 'required|email',
+            'password' => 'required',
         ];
 
         $messages = [
             'email.required' => 'Email is required',
             'email.email' => 'Invalid email',
+            'name.required' => 'Name is required',
+            'password.required' => 'Password is required',
         ];
 
         $validator = Validator:: make($get_input, $rules, $messages);
@@ -38,7 +42,7 @@ class CustomerController extends Controller
             ]);
 
             $token = auth()->login($customer);
-            return $this->respondWithToken($token, $customer);
+            return $this->respondWithToken($token, $customer, 201);
         } else {
             return ErrorHelper::USR_04();
         }
@@ -64,15 +68,14 @@ class CustomerController extends Controller
         }
 
         $credentials = $request->only(['email', 'password']);
-
         if (!$token = auth()->attempt($credentials)) {
             return ErrorHelper::AUT_02();
         }
 
-        return $this->respondWithToken($token, auth()->user());
+        return $this->respondWithToken($token, auth()->user(), 200);
     }
 
-    protected function respondWithToken($token, $customer)
+    protected function respondWithToken($token, $customer, $status)
     {
       return response()->json([
         'customer' => [
@@ -95,6 +98,7 @@ class CustomerController extends Controller
         ],
         'accessToken' => $token,
         'expires_in' => '24h'
-      ]);
+      ])
+      ->setStatusCode($status);
     }
 }
