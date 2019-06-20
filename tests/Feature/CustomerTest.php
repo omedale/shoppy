@@ -12,12 +12,7 @@ use App\Helpers\ErrorHelper;
 class CustomerTest extends TestCase
 {
     public $auth_payload = ['name' => 'Oluwafemi', 'email' => 'omedal@customer.com', 'password' => 'test'];
-    /**
-     * Test invalid registration
-     * When name, email and password are required
-     *
-     * @return void
-     */
+
     public function test_email_name_and_password_required_to_register()
     {
         $this->json('POST', 'api/customer')
@@ -36,11 +31,6 @@ class CustomerTest extends TestCase
             ]);
     }
 
-    /**
-     * Test successfull registration
-     *
-     * @return void
-     */
     public function test_successfull_registeration()
     {
         $this->json('POST', 'api/customer', $this->auth_payload)
@@ -66,12 +56,7 @@ class CustomerTest extends TestCase
             ]);
     }
 
-    /**
-     * Test invalid login
-     * When email and password are required
-     *
-     * @return void
-     */
+
     public function test_email_and_password_required_to_login()
     {
         $this->json('POST', 'api/customer/login')
@@ -89,11 +74,6 @@ class CustomerTest extends TestCase
             ]);
     }
 
-    /**
-     * Test successfull login
-     *
-     * @return void
-     */
 
     public function test_successfull_login() {
         $this->json('POST', 'api/customer/login', $this->auth_payload)
@@ -120,11 +100,6 @@ class CustomerTest extends TestCase
             $this->clear_db();
     }
 
-    /**
-     * Test for invalid customer address update
-     * When required fields are not provided
-     * @return void
-     */
     public function test_unsuccessfull_customer_address_update() {
         $customer = factory(Customer::class)->create();
         $token = $customer->generateToken('omedale');
@@ -151,11 +126,6 @@ class CustomerTest extends TestCase
         ]);
     }
 
-     /**
-     * Test customer address update
-     * Can succesfully update address
-     * @return void
-     */
     public function test_successfull_customer_address_update() {
         $customer = factory(Customer::class)->create();
         $token = $customer->generateToken('omedale');
