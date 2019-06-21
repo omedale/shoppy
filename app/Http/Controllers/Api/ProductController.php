@@ -23,7 +23,7 @@ class ProductController extends Controller
         ]);
     }
 
-    public function search(Request $request) {
+    public function search(Request $request, Product $product) {
         $get_input = $request->all();
         $search_word = trim(Input::get('q'));
         $data = $this->buildData($request);
@@ -41,12 +41,16 @@ class ProductController extends Controller
             return ErrorHelper::USR_02($validator->errors());
         }
 
-        $match = "MATCH(name,description) AGAINST(? IN BOOLEAN MODE)";
-        $description_length = $data['description_length'];
-        $products = Product::query()->with('attributes')
-                    ->whereRaw($match, $this->fullTextSearchTerm($term, $data['all_words']))
-                    ->select(DB::raw("product_id, name, substr(description, 1, $description_length) as description, price, discounted_price, thumbnail, image, image_2"));
+        $products = Product::query();
+        if (isset($request->filter)) {
+            $filter_data = json_decode($request->filter);
+            $has_attribute_filter = isset($filter_data->attribute_value_ids) && count($filter_data->attribute_value_ids) > 0;
+            $has_category_filter = isset($filter_data->category_ids) && count($filter_data->category_ids) > 0;
+            $products = $has_attribute_filter ? $product->filterByAttributes($products, $filter_data->attribute_value_ids) : $products;
+            $products = $has_category_filter ? $product->filterByCatgories($products, $filter_data->category_ids) : $products;
+        }
 
+        $products = $product->searchProduct($products, $data, $this->fullTextSearchTerm($term, $data['all_words']));
         return response()->json([
             'count' => $products->count(),
             'rows' => $products->offset($data['offset'])->limit($data['limit'])->get()

@@ -98,4 +98,27 @@ class ProductTest extends TestCase
             ]);
         $this->assertEquals(5, count($rows));
     }
+
+    public function test_search_product_are_listed_correctly_with_search_query_and_filter_data()
+    {
+
+        $customer = factory(Customer::class)->create();
+        $token = $customer->generateToken('omedale');
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $response = $this->json('GET', '/api/products/search',
+                    ['q' => 'shi', 'limit' => 5,
+                    'filter' => '{"category_ids":[1,2],"attribute_value_ids":[1]}'],
+                    $headers);
+        $rows = $response->baseResponse->getData()->rows;
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'rows',
+                'count',
+            ])
+            ->assertJson([
+                'count' => 16,
+            ]);
+        $this->assertEquals(5, count($rows));
+    }
 }
