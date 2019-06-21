@@ -59,4 +59,43 @@ class ProductTest extends TestCase
             ]);
         $this->assertEquals(1, count($rows));
     }
+
+    public function test_search_product_are_not_listed_with_no_search_query()
+    {
+        $customer = factory(Customer::class)->create();
+        $token = $customer->generateToken('omedale');
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $response = $this->json('GET', '/api/products/search', [], $headers)
+            ->assertJson([
+            'error' => [
+                'status' => 500,
+                'code' => "USR_02",
+                'message' => "The field(s) are/is required.",
+                'field_errors' => [
+                    "q" => ["Search query is required"]
+                ]
+            ]
+        ]);
+    }
+
+    public function test_search_product_are_listed_correctly_with_search_query()
+    {
+
+        $customer = factory(Customer::class)->create();
+        $token = $customer->generateToken('omedale');
+        $headers = ['Authorization' => "Bearer $token"];
+
+        $response = $this->json('GET', '/api/products/search', ['q' => 'shirt', 'limit' => 5], $headers);
+        $rows = $response->baseResponse->getData()->rows;
+        $response->assertStatus(200)
+            ->assertJsonStructure([
+                'rows',
+                'count',
+            ])
+            ->assertJson([
+                'count' => 80,
+            ]);
+        $this->assertEquals(5, count($rows));
+    }
 }
