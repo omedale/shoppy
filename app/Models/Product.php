@@ -33,6 +33,12 @@ class Product extends Model
         });
     }
 
+    public function filterByDepartments($query, $department_ids) {
+        return $query->whereHas('categories.department', function($q) use ($department_ids) {
+            $q->whereIn('department_id', $department_ids);
+        });
+    }
+
     public function searchProduct($query, $data, $fullTextSearchTerm) {
         $match = "MATCH(name,description) AGAINST(? IN BOOLEAN MODE)";
         $description_length = $data['description_length'];

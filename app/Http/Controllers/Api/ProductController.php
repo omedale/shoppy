@@ -46,6 +46,8 @@ class ProductController extends Controller
             $filter_data = json_decode($request->filter);
             $has_attribute_filter = isset($filter_data->attribute_value_ids) && count($filter_data->attribute_value_ids) > 0;
             $has_category_filter = isset($filter_data->category_ids) && count($filter_data->category_ids) > 0;
+            $has_department_filter = isset($filter_data->department_ids) && count($filter_data->department_ids) > 0;
+            $products = $has_department_filter ? $product->filterByDepartments($products, $filter_data->department_ids) : $products;
             $products = $has_attribute_filter ? $product->filterByAttributes($products, $filter_data->attribute_value_ids) : $products;
             $products = $has_category_filter ? $product->filterByCatgories($products, $filter_data->category_ids) : $products;
         }
