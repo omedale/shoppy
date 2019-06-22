@@ -24,5 +24,6 @@ class TuringProvider extends ServiceProvider
     public function boot()
     {
         require_once app_path() . '/Helpers/ErrorHelper.php';
+        require_once app_path() . '/Helpers/CommonHelper.php';
     }
 }
