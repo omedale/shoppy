@@ -22,19 +22,19 @@ class Product extends Model
     }
 
     public function filterByAttributes($query, $attribute_value_ids) {
-        return $query->whereHas('attributes', function($q) use ($attribute_value_ids) {
+        return $query->orWhereHas('attributes', function($q) use ($attribute_value_ids) {
             $q->whereIn('product_attribute.attribute_value_id', $attribute_value_ids);
         });
     }
 
     public function filterByCatgories($query, $category_ids) {
-        return $query->whereHas('categories', function($q) use ($category_ids) {
+        return $query->orWhereHas('categories', function($q) use ($category_ids) {
             $q->whereIn('product_category.category_id', $category_ids);
         });
     }
 
     public function filterByDepartments($query, $department_ids) {
-        return $query->whereHas('categories.department', function($q) use ($department_ids) {
+        return $query->orWhereHas('categories.department', function($q) use ($department_ids) {
             $q->whereIn('department_id', $department_ids);
         });
     }

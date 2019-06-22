@@ -47,9 +47,11 @@ class ProductController extends Controller
             $has_attribute_filter = isset($filter_data->attribute_value_ids) && count($filter_data->attribute_value_ids) > 0;
             $has_category_filter = isset($filter_data->category_ids) && count($filter_data->category_ids) > 0;
             $has_department_filter = isset($filter_data->department_ids) && count($filter_data->department_ids) > 0;
+            $has_price_range = isset($filter_data->price_range) && count($filter_data->price_range) > 0;
             $products = $has_department_filter ? $product->filterByDepartments($products, $filter_data->department_ids) : $products;
             $products = $has_attribute_filter ? $product->filterByAttributes($products, $filter_data->attribute_value_ids) : $products;
             $products = $has_category_filter ? $product->filterByCatgories($products, $filter_data->category_ids) : $products;
+            $products = $has_price_range ? $product->orWhereBetween('price', $filter_data->price_range) : $products;
         }
 
         $products = $product->searchProduct($products, $data, $this->fullTextSearchTerm($term, $data['all_words']));

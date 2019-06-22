@@ -107,8 +107,8 @@ class ProductTest extends TestCase
         $headers = ['Authorization' => "Bearer $token"];
 
         $response = $this->json('GET', '/api/products/search',
-                    ['q' => 'shi', 'limit' => 5,
-                    'filter' => '{"category_ids":[1,2],"attribute_value_ids":[1]}'],
+                    ['q' => 'shirt', 'limit' => 5,
+                    'filter' => '{"category_ids":[1,2],"price_range": [0.0, 14.99],"attribute_value_ids":[1]}'],
                     $headers);
         $rows = $response->baseResponse->getData()->rows;
         $response->assertStatus(200)
@@ -117,7 +117,7 @@ class ProductTest extends TestCase
                 'count',
             ])
             ->assertJson([
-                'count' => 16,
+                'count' => 17,
             ]);
         $this->assertEquals(5, count($rows));
     }
