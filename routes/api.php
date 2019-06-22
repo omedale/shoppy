@@ -23,6 +23,10 @@ Route::group(['middleware' => ['api','cors']], function () {
         Route::post('/shoppingcart/add', 'Api\ShoppingCartController@add');
         Route::put('/shoppingcart/update/{item_id}', 'Api\ShoppingCartController@update');
         Route::delete('/shoppingcart/removeProduct/{item_id}', 'Api\ShoppingCartController@removeProduct');
+
+        Route::post('/orders', 'Api\OrderController@create');
+
+        Route::post('/stripe/charge', 'Api\StripeController@charge');
     });
     Route::post('/customer', 'Api\CustomerController@register');
     Route::post('/customer/login', 'Api\CustomerController@login');
