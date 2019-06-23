@@ -62,14 +62,15 @@ class OrderController extends Controller
                         'attributes' => $item->attributes,
                         'product_name' => $item->product->name,
                         'quantity' => $item->quantity,
-                        'unit_cost' => $item->product->price]);
+                        'unit_cost' => (float)$item->product->discounted_price > 0 ? $item->product->discounted_price : $item->product->price]);
         }
         orderDetail::insert($order_detail_data);
     }
 
     private function totalAmount($items, $request) {
         $items_amounts = $items->map(function ($item) {
-            return (float)$item->product->price * $item->quantity;
+            $price = (float)$item->product->discounted_price > 0 ? (float)$item->product->discounted_price : (float)$item->product->price;
+            return $price * $item->quantity;
         });
 
         $items_total = collect($items_amounts)->sum();

@@ -8,6 +8,7 @@ class Category extends Model
 {
     protected $table = 'category';
     protected $primaryKey = "category_id";
+    protected $hidden = ['description'];
     public $timestamps = false;
 
     public function department()

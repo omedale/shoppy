@@ -31,4 +31,7 @@ Route::group(['middleware' => ['api','cors']], function () {
 
     Route::get('/products', 'Api\ProductController@index');
     Route::get('/products/search', 'Api\ProductController@search');
+
+    Route::get('/config/filter-data', 'Api\ConfigController@filterData');
+    Route::get('/config/checkout-data', 'Api\ConfigController@checkOutData');
 });

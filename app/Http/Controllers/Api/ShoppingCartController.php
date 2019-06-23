@@ -104,15 +104,16 @@ class ShoppingCartController extends Controller
     }
 
     private function cartItem($item) {
+        $price = (float)$item->product->discounted_price > 0 ? $item->product->discounted_price : $item->product->price;
         return [
             "item_id" => $item->item_id,
             "name" => $item->product->name,
             "attributes" => $item->attributes,
             "product_id" => $item->product_id,
-            "price" => $item->product->price,
+            "price" => $price,
             "quantity" => (int)$item->quantity,
             "image" => $item->product->image,
-            "subtotal" => ($item->product->price * $item->quantity),
+            "subtotal" => ((float)$price * $item->quantity),
         ];
     }
 }
