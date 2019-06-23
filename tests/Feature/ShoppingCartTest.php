@@ -64,7 +64,6 @@ class ShoppingCartTest extends TestCase
 
     public function test_update_cart_with_valid_header_and_fields()
     {
-        $cart_id = CommonHelper::generateUniqueId();
         $shopping_cart = factory(ShoppingCart::class)->create();
         $this->json('PUT', 'api/shoppingcart/update/'.$shopping_cart->item_id,
             [
@@ -81,9 +80,26 @@ class ShoppingCartTest extends TestCase
             ]);
     }
 
+    public function test_cart_items_are_listed_correctly_with_cart_id()
+    {
+        $shopping_cart = factory(ShoppingCart::class)->create();
+        $response = $this->json('GET',
+                            '/api/shoppingcart/'.$shopping_cart->cart_id,
+                            ['limit' => 1],
+                            $this->getHeader());
+        $cart_items = $response->baseResponse->getData();
+        $response->assertStatus(200);
+        $this->assertEquals(1, count($cart_items));
+        $this->clear_shopping_cart_table();
+    }
+
     private function getHeader() {
         $customer = factory(Customer::class)->create();
         $token = $customer->generateToken('omedale');
         return ['Authorization' => "Bearer $token"];
+    }
+
+    private function clear_shopping_cart_table() {
+        ShoppingCart::truncate();
     }
 }

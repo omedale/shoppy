@@ -96,7 +96,7 @@ class CustomerTest extends TestCase
                 ],
                 'expires_in' => '24h',
             ]);
-            $this->clear_db();
+            $this->clear_customer_table();
     }
 
     public function test_unsuccessfull_customer_address_update() {
@@ -150,7 +150,7 @@ class CustomerTest extends TestCase
             ]);
     }
 
-    private function clear_db() {
+    private function clear_customer_table() {
         Customer::truncate();
     }
 }

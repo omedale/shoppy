@@ -16,12 +16,7 @@ class ProductTest extends TestCase
 {
     public function test_product_are_listed_correctly_with_default_params()
     {
-
-        $customer = factory(Customer::class)->create();
-        $token = $customer->generateToken('omedale');
-        $headers = ['Authorization' => "Bearer $token"];
-
-        $response = $this->json('GET', '/api/products', [], $headers);
+        $response = $this->json('GET', '/api/products', [], []);
         $rows = $response->baseResponse->getData()->rows;
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -40,11 +35,7 @@ class ProductTest extends TestCase
     public function test_product_are_listed_correctly_with_limit_equal_one()
     {
 
-        $customer = factory(Customer::class)->create();
-        $token = $customer->generateToken('omedale');
-        $headers = ['Authorization' => "Bearer $token"];
-
-        $response = $this->json('GET', '/api/products', ['limit' => 1], $headers);
+        $response = $this->json('GET', '/api/products', ['limit' => 1], []);
         $rows = $response->baseResponse->getData()->rows;
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -62,11 +53,7 @@ class ProductTest extends TestCase
 
     public function test_search_product_are_not_listed_with_no_search_query()
     {
-        $customer = factory(Customer::class)->create();
-        $token = $customer->generateToken('omedale');
-        $headers = ['Authorization' => "Bearer $token"];
-
-        $response = $this->json('GET', '/api/products/search', [], $headers)
+        $response = $this->json('GET', '/api/products/search', [], [])
             ->assertJson([
             'error' => [
                 'status' => 500,
@@ -81,12 +68,7 @@ class ProductTest extends TestCase
 
     public function test_search_product_are_listed_correctly_with_search_query()
     {
-
-        $customer = factory(Customer::class)->create();
-        $token = $customer->generateToken('omedale');
-        $headers = ['Authorization' => "Bearer $token"];
-
-        $response = $this->json('GET', '/api/products/search', ['q' => 'shirt', 'limit' => 5], $headers);
+        $response = $this->json('GET', '/api/products/search', ['q' => 'shirt', 'limit' => 5], []);
         $rows = $response->baseResponse->getData()->rows;
         $response->assertStatus(200)
             ->assertJsonStructure([
@@ -101,15 +83,10 @@ class ProductTest extends TestCase
 
     public function test_search_product_are_listed_correctly_with_search_query_and_filter_data()
     {
-
-        $customer = factory(Customer::class)->create();
-        $token = $customer->generateToken('omedale');
-        $headers = ['Authorization' => "Bearer $token"];
-
         $response = $this->json('GET', '/api/products/search',
                     ['q' => 'shirt', 'limit' => 5,
                     'filter' => '{"category_ids":[1,2],"price_range": [0.0, 14.99],"attribute_value_ids":[1]}'],
-                    $headers);
+                    []);
         $rows = $response->baseResponse->getData()->rows;
         $response->assertStatus(200)
             ->assertJsonStructure([

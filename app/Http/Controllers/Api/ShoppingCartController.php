@@ -11,7 +11,7 @@ use App\Models\Customer;
 use App\Models\ShoppingCart;
 use App\Helpers\ErrorHelper;
 use App\Helpers\CommonHelper;
-use Illuminate\Support\Facades\INPUT;
+use Illuminate\Support\Facades\Input;
 
 class ShoppingCartController extends Controller
 {
@@ -49,7 +49,7 @@ class ShoppingCartController extends Controller
         $item->save();
 
         return response()->json([
-            $this->cartResponse($item, $product)
+            $this->cartItem($item)
           ])
           ->setStatusCode(200);
     }
@@ -65,7 +65,7 @@ class ShoppingCartController extends Controller
         ];
 
         $validator = Validator:: make($get_input, $rules, $messages);
-        if($validator->fails()) {
+        if($validator->fails() || !isset($request->item_id)) {
             return ErrorHelper::USR_02($validator->errors());
         }
 
@@ -75,11 +75,24 @@ class ShoppingCartController extends Controller
         $item->quantity = $request->quantity;
         $item->save();
 
-        $product = Product::find($item->product_id);
         return response()->json([
-            $this->cartResponse($item, $product)
+            $this->cartItem($item)
           ])
           ->setStatusCode(200);
+    }
+
+    public function getCartItems(Request $request) {
+        if(!isset($request->cart_id)) {
+            return ErrorHelper::USR_02($validator->errors());
+        }
+
+        $cart_items = ShoppingCart::where('cart_id', $request->cart_id)->get()->map(function($item) {
+            return $this->cartItem($item);
+        });
+        return response()->json(
+            $cart_items
+        )
+        ->setStatusCode(200);
     }
 
     public function removeProduct(Request $request, $item_id) {
@@ -90,16 +103,16 @@ class ShoppingCartController extends Controller
           ->setStatusCode(200);
     }
 
-    private function cartResponse($item, $product) {
+    private function cartItem($item) {
         return [
             "item_id" => $item->item_id,
-            "name" => $product->name,
+            "name" => $item->product->name,
             "attributes" => $item->attributes,
             "product_id" => $item->product_id,
-            "price" => $product->price,
+            "price" => $item->product->price,
             "quantity" => (int)$item->quantity,
-            "image" => $product->image,
-            "subtotal" => ($product->price * $item->quantity),
+            "image" => $item->product->image,
+            "subtotal" => ($item->product->price * $item->quantity),
         ];
     }
 }

@@ -14,6 +14,7 @@
         "fideloper/proxy": "^4.0",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
+        "stripe/stripe-php": "^6.38",
         "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
