@@ -16,14 +16,7 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => ['api','cors']], function () {
     Route::group(['middleware' => 'jwt-auth'], function () {
         Route::put('/customers/address', 'Api\CustomerController@updateAddress');
-
-        Route::post('/shoppingcart/add', 'Api\ShoppingCartController@add');
-        Route::get('/shoppingcart/{cart_id}', 'Api\ShoppingCartController@getCartItems');
-        Route::put('/shoppingcart/update/{item_id}', 'Api\ShoppingCartController@update');
-        Route::delete('/shoppingcart/removeProduct/{item_id}', 'Api\ShoppingCartController@removeProduct');
-
         Route::post('/orders', 'Api\OrderController@create');
-
         Route::post('/stripe/charge', 'Api\StripeController@charge');
     });
     Route::post('/customer', 'Api\CustomerController@register');
@@ -34,4 +27,9 @@ Route::group(['middleware' => ['api','cors']], function () {
 
     Route::get('/config/filter-data', 'Api\ConfigController@filterData');
     Route::get('/config/checkout-data', 'Api\ConfigController@checkOutData');
+
+    Route::post('/shoppingcart/add', 'Api\ShoppingCartController@add');
+    Route::get('/shoppingcart/{cart_id}', 'Api\ShoppingCartController@getCartItems');
+    Route::put('/shoppingcart/update/{item_id}', 'Api\ShoppingCartController@update');
+    Route::delete('/shoppingcart/removeProduct/{item_id}', 'Api\ShoppingCartController@removeProduct');
 });
