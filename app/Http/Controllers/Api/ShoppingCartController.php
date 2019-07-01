@@ -76,9 +76,7 @@ class ShoppingCartController extends Controller
 
         $cart_items = $this->getAllItems($item->cart_id);
 
-        return response()->json([
-            $this->cartItem($item)
-          ])
+        return response()->json($cart_items)
           ->setStatusCode(200);
     }
 
