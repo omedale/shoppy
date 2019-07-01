@@ -94,6 +94,14 @@ class ShoppingCartController extends Controller
         ->setStatusCode(200);
     }
 
+    public function generateUniqueId() {
+        return response()->json(
+            [
+                'cart_id' => CommonHelper::generateUniqueId()
+            ]
+            );
+    }
+
     private function getAllItems($cart_id) {
         return ShoppingCart::where('cart_id', $cart_id)->get()->map(function($item) {
             return $this->cartItem($item);

@@ -28,6 +28,7 @@ Route::group(['middleware' => ['api','cors']], function () {
     Route::get('/config/filter-data', 'Api\ConfigController@filterData');
     Route::get('/config/checkout-data', 'Api\ConfigController@checkOutData');
 
+    Route::get('/shoppingcart/generateUniqueId', 'Api\ShoppingCartController@generateUniqueId');
     Route::post('/shoppingcart/add', 'Api\ShoppingCartController@add');
     Route::get('/shoppingcart/{cart_id}', 'Api\ShoppingCartController@getCartItems');
     Route::put('/shoppingcart/update/{item_id}', 'Api\ShoppingCartController@update');
