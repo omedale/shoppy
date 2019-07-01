@@ -11,18 +11,6 @@ use App\Helpers\CommonHelper;
 
 class ShoppingCartTest extends TestCase
 {
-    public function test_add_to_cart_without_fields_and_header()
-    {
-        $this->json('POST', 'api/shoppingcart/add')
-            ->assertStatus(401)
-            ->assertJson([
-                'error' => [
-                    'status' => 401,
-                    'code' => "AUT_01",
-                    'message' => "Authorization code is empty",
-                ]
-            ]);
-    }
 
     public function test_add_to_cart_with_valid_header_and_no_fields()
     {

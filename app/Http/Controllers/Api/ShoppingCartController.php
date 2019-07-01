@@ -48,9 +48,8 @@ class ShoppingCartController extends Controller
         $item->added_on = CommonHelper::getCurrentDateTime();
         $item->save();
 
-        return response()->json([
-            $this->cartItem($item)
-          ])
+        $cart_items = $this->getAllItems($request->cart_id);
+        return response()->json($cart_items)
           ->setStatusCode(200);
     }
 
@@ -75,6 +74,8 @@ class ShoppingCartController extends Controller
         $item->quantity = $request->quantity;
         $item->save();
 
+        $cart_items = $this->getAllItems($item->cart_id);
+
         return response()->json([
             $this->cartItem($item)
           ])
@@ -86,13 +87,17 @@ class ShoppingCartController extends Controller
             return ErrorHelper::USR_02($validator->errors());
         }
 
-        $cart_items = ShoppingCart::where('cart_id', $request->cart_id)->get()->map(function($item) {
-            return $this->cartItem($item);
-        });
+        $cart_items = $this->getAllItems($request->cart_id);
         return response()->json(
             $cart_items
         )
         ->setStatusCode(200);
+    }
+
+    private function getAllItems($cart_id) {
+        return ShoppingCart::where('cart_id', $cart_id)->get()->map(function($item) {
+            return $this->cartItem($item);
+        });
     }
 
     public function removeProduct(Request $request, $item_id) {
