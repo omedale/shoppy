@@ -122,8 +122,10 @@ class ShoppingCartController extends Controller
             "attributes" => $item->attributes,
             "product_id" => $item->product_id,
             "price" => $price,
+            "discounted_price" => $item->product->discounted_price,
             "quantity" => (int)$item->quantity,
             "image" => $item->product->image,
+            "thumbnail" => $item->product->thumbnail,
             "subtotal" => ((float)$price * $item->quantity),
         ];
     }

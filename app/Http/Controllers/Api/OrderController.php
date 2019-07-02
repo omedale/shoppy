@@ -36,7 +36,6 @@ class OrderController extends Controller
         }
 
         $items = ShoppingCart::where('cart_id', $request->cart_id)->get();
-
         $order = new Order;
         $order->total_amount = $this->totalAmount($items, $request);
         $order->status = 1;
@@ -76,7 +75,8 @@ class OrderController extends Controller
         $items_total = collect($items_amounts)->sum();
         $tax_percentage = Tax::find($request->tax_id)->value('tax_percentage');
         $shipping_cost = Shipping::find($request->shipping_id)->value('shipping_cost');
-        $amount = $items_total + ($items_total * ((float)$tax_percentage/100)) + $shipping_cost;
+        $shipping = Shipping::find($request->shipping_id);
+        $amount = $items_total + ($items_total * ((float)$tax_percentage/100)) + $shipping->shipping_cost;
         $total_amount = number_format(collect($amount)->sum(), 2, '.', '');
         return $total_amount;
     }
