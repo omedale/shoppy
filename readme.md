@@ -37,8 +37,8 @@ $ mysql -u root
 > exit
 
 $ cd database/db
-$ mysql -u root dev  < tshirtshop.sql
-$ mysql -u root test  < tshirtshop.sql
+$ mysql -u root dev  < shop.sql
+$ mysql -u root test  < shop.sql
 
 
 $ php artisan migrate
